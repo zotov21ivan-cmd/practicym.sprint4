@@ -31,59 +31,47 @@ def test_add_new_book_duplicate_name(collector):
 
 # Тесты для установки и получения жанра
 
-def test_set_book_genre_assigned_value(collector):
-    name = 'Книга'
-    genre = 'Фантастика'
-    collector.add_new_book(name)
-    collector.set_book_genre(name, genre)
+def test_get_book_genre_direct_dict_access(collector):
+    name = 'Некоторая книга'
+    genre = 'Детская литература'
+    collector.books_genre[name] = {'genre': genre} 
+    # Проверяем, что get_book_genre возвращает правильное значение
     assert collector.get_book_genre(name) == genre
 
-def test_get_book_genre_default_empty(collector):
-    name = 'Некоторая книга'
-    collector.add_new_book(name)
-    # Без установки жанра по умолчанию возвращается ''
-    assert collector.get_book_genre(name) == ''
+def test_set_book_genre_direct_verification(collector):
+    name = 'Книга для проверки'
+    genre = 'Фантастика'
+    # Вызываем метод установки жанра
+    collector.set_book_genre(name, genre)
+    # Проверяем напрямую, что жанр записался в внутренний словарь
+    assert collector.books_genre[name]['genre'] == genre
 
 # Тесты для получения книг для детей по жанру
+def test_get_books_for_children_returns_only_relevant_books(collector):
+    # Создаём книги с разными жанрами
+    adventure_name = 'Приключение'
+    horror_name = 'Страшилка'
+    no_genre_name = 'Без жанра'
 
-def test_get_books_for_children_includes_adventure(collector):
-    name = 'Приключение'
-    genre = 'Фантастика'
-    collector.add_new_book(name)
-    collector.set_book_genre(name, genre)
-    # Проверка, что книга для детей включена
-    assert name in collector.get_books_for_children()
+    # Добавляем книги
+    collector.add_new_book(adventure_name)
+    collector.set_book_genre(adventure_name, 'Фантастика')
 
-def test_get_books_for_children_excludes_horror(collector):
-    name = 'Страшилка'
-    genre = 'Ужасы'
-    collector.add_new_book(name)
-    collector.set_book_genre(name, genre)
-    # Проверка, что книга ужасов исключена
-    books = collector.get_books_for_children()
-    assert name not in books
+    collector.add_new_book(horror_name)
+    collector.set_book_genre(horror_name, 'Ужасы')
 
-def test_get_books_for_children_excludes_unset_genre(collector):
-    name = 'Это без жанра'
-    collector.add_new_book(name)
-    # Книга без жанра не должна включаться
-    assert name not in collector.get_books_for_children()
+    collector.add_new_book(no_genre_name)
 
-# Тест на получение полного словаря книг и жанров
-
-def test_get_books_genre_returns_current_dict(collector):
-    name1 = 'Книга1'
-    name2 = 'Книга2'
-    genre1 = 'Жанр1'
-    genre2 = 'Жанр2'
-    collector.add_new_book(name1)
-    collector.set_book_genre(name1, genre1)
-    collector.add_new_book(name2)
-    collector.set_book_genre(name2, genre2)
-    genre_dict = collector.get_books_genre()
-    assert genre_dict[name1] == genre1
-    assert genre_dict[name2] == genre2
-
+    # Получаем список книг для детей
+    books_for_children = collector.get_books_for_children()
+    
+    # Проверяем, что книга "Приключение" включена
+    assert adventure_name in books_for_children, "Книга 'Приключение' должна быть в списке."
+    # Проверяем, что книга "Страшилка" исключена
+    assert horror_name not in books_for_children, "Книга 'Страшилка' не должна быть в списке."
+    # Проверяем, что книга без жанра исключена
+    assert no_genre_name not in books_for_children, "Книга без жанра не должна быть в списке."
+    
 # Тест на получение книг по конкретному жанру
 
 def test_get_books_with_specific_genre_fantasy(collector):
@@ -112,6 +100,12 @@ def test_get_books_genre_returns_current_dict(collector):
     }
 
 # Тесты для работы с избранным
+
+def check_favorites_list(collector, expected_list):
+    # Получаем текущий список избранных книг
+    favorites = collector.get_list_of_favorites_books()
+    # Проверяем, что список совпадает с ожидаемым
+    assert sorted(favorites) == sorted(expected_list)
 
 def test_add_book_in_favorites_success(collector):
     name = 'Пушкин'
