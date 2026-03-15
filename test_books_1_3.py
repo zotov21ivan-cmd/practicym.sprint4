@@ -100,6 +100,9 @@ def test_get_books_genre_returns_current_dict(collector):
     }
 
 # Тесты для работы с избранным
+@pytest.fixture
+def expected_list():
+    return BooksCollector()
 
 def check_favorites_list(collector, expected_list):
     # Получаем текущий список избранных книг
