@@ -98,18 +98,8 @@ def test_get_books_genre_returns_current_dict(collector):
         'Книга1': 'Жанр1',
         'Книга2': 'Жанр2'
     }
-
-# Тесты для работы с избранным
-@pytest.fixture
-def expected_list():
-    return BooksCollector()
-
-def check_favorites_list(collector, expected_list):
-    # Получаем текущий список избранных книг
-    favorites = collector.get_list_of_favorites_books()
-    # Проверяем, что список совпадает с ожидаемым
-    assert sorted(favorites) == sorted(expected_list)
-
+    
+    # тесты для работы с избранным
 def test_add_book_in_favorites_success(collector):
     name = 'Пушкин'
     collector.add_new_book(name)
