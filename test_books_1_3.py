@@ -65,11 +65,19 @@ def test_get_books_for_children_returns_only_relevant_books(collector):
     # Получаем список книг для детей
     books_for_children = collector.get_books_for_children()
     
-    # Проверяем, что книга "Приключение" включена
+def test_adventure_book_included(collector):# проверяю что приключение есть в списке
+    adventure_name = 'Приключение'
+    books_for_children = collector.get_books_for_children()
     assert adventure_name in books_for_children, "Книга 'Приключение' должна быть в списке."
-    # Проверяем, что книга "Страшилка" исключена
+
+def test_horror_book_excluded(collector):# проверяю что страшилка есть в списке
+    horror_name = 'Страшилка'
+    books_for_children = collector.get_books_for_children()
     assert horror_name not in books_for_children, "Книга 'Страшилка' не должна быть в списке."
-    # Проверяем, что книга без жанра исключена
+
+def test_book_without_genre_excluded(collector):# проверяю что книги без жанра есть в списке
+    no_genre_name = 'Книга без жанра'
+    books_for_children = collector.get_books_for_children()
     assert no_genre_name not in books_for_children, "Книга без жанра не должна быть в списке."
     
 # Тест на получение книг по конкретному жанру
@@ -100,6 +108,12 @@ def test_get_books_genre_returns_current_dict(collector):
     }
     
     # тесты для работы с избранным
+def test_add_new_book_success(collector):     # добавил положительную проверку для get_list_of_all_books
+    name = 'Толстой'
+    collector.add_new_book(name)
+    books = collector.get_list_of_all_books()
+    assert name in books, "Книга должна успешно добавиться в коллекцию"
+    
 def test_add_book_in_favorites_success(collector):
     name = 'Пушкин'
     collector.add_new_book(name)
